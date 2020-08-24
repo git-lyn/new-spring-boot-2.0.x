@@ -100,6 +100,9 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 		Set<String> exclusions = getExclusions(annotationMetadata, attributes);
 		checkExcludedClasses(configurations, exclusions);
 		configurations.removeAll(exclusions);
+		/**
+		 * 进行将不需要的Class进行过滤掉
+		 */
 		configurations = filter(configurations, autoConfigurationMetadata);
 		fireAutoConfigurationImportEvents(configurations, exclusions);
 		return StringUtils.toStringArray(configurations);
@@ -225,6 +228,7 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 		boolean skipped = false;
 		for (AutoConfigurationImportFilter filter : getAutoConfigurationImportFilters()) {
 			invokeAwareMethods(filter);
+			// org.springframework.boot.autoconfigure.condition.OnClassCondition.match
 			boolean[] match = filter.match(candidates, autoConfigurationMetadata);
 			for (int i = 0; i < match.length; i++) {
 				if (!match[i]) {
